@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map: {{ title }}</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { height: 100vh; width: 100vw; }
+        .map-header {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="map-header">
+        <h3>{{ title }}</h3>
+        <p>Coordinates: {{ lat }}, {{ lng }}</p>
+    </div>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const lat = {{ lat }};
+        const lng = {{ lng }};
+        const title = "{{ title }}";
+
+        // Initialize map
+        const map = L.map('map').setView([lat, lng], 16);
+
+        // Add tile layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Add marker
+        const marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup(`<b>${title}</b><br>Coordinates: ${lat}, ${lng}`)
+            .openPopup();
+
+        // Add circle for better visibility
+        L.circle([lat, lng], {
+            color: 'red',
+            fillColor: '#f03',
+            fillOpacity: 0.2,
+            radius: 50
+        }).addTo(map);
+    </script>
+</body>
+</html>
